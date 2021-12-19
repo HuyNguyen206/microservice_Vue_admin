@@ -34,12 +34,12 @@ export default {
   },
   methods:{
      login(){
-       axios.get(`${process.env.VUE_APP_ROOT_BACKEND}sanctum/csrf-cookie`).then(response => {
+       // axios.get(`${process.env.VUE_APP_ROOT_BACKEND}sanctum/csrf-cookie`).then(response => {
         axios.post(`${process.env.VUE_APP_ROOT_API}login`, {email: this.email, password: this.password})
             .then(res => {
               console.log(res)
             })
-      });
+      // });
     }
   }
 }
