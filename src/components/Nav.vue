@@ -6,16 +6,44 @@
     </button>
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
     <div class="navbar-nav">
-      <div class="nav-item text-nowrap">
-        <a class="nav-link px-3" href="#">Sign out</a>
+      <div class="nav-item text-nowrap" style="display: flex; align-items: center">
+        <span class="px-3 mr-2 text-white">{{ fullName }}</span>
+        <a class="nav-link px-3" href="#" @click.prevent="logout">Sign out</a>
       </div>
     </div>
   </header>
 </template>
 
 <script>
+
+import {useRouter} from "vue-router";
+import {computed, toRefs} from 'vue'
+
 export default {
-  name: "Nav"
+  name: "Nav",
+  props:['user'],
+  setup(props){
+    const router = useRouter()
+    const {user} = toRefs(props)
+    function logout(){
+      axios.post('logout')
+      .then(res => {
+        localStorage.removeItem('token')
+        console.log(res.data)
+        router.push({name: 'Login'})
+      })
+      .catch(err => {
+        console.log(err.response.data)
+      })
+    }
+    const fullName = computed(() => {
+      return user?.value?.first_name + user?.value?.last_name || ''
+    })
+    return {
+      logout,
+      fullName
+    }
+  }
 }
 </script>
 
