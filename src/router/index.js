@@ -4,7 +4,7 @@ import Login from "@/views/public/Login";
 import Register from "@/views/public/Register";
 import Secure from "@/views/secure/Secure";
 import User from "@/views/secure/users/index";
-
+import UserCreate from "@/views/secure/users/create";
 const routes = [
     {
         path: '/',
@@ -23,6 +23,11 @@ const routes = [
                 path: 'users',
                 name: 'users.index',
                 component: User
+            },
+            {
+                path: 'users/create',
+                name: 'users.create',
+                component: UserCreate
             }
         ]
 
