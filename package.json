@@ -10,7 +10,10 @@
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
     "vue-axios": "^3.4.0",
+    "vue-image-crop-upload": "^3.0.3",
     "vue-router": "^4.0.0-0",
+    "vue-select": "^4.0.0-beta.1",
+    "vue3-dropzone": "^0.0.7",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

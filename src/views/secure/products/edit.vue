@@ -1,6 +1,6 @@
 <template>
   <div class="col-9">
-    <form action="" @submit.prevent="create" class="form pt-5">
+    <form action="" @submit.prevent="update" class="form pt-5">
       <div class="form-group pb-4">
         <label>First name</label>
         <input type="text" class="form-control" :class="{'is-invalid': errorValidation.first_name}" v-model="form.first_name">
@@ -17,22 +17,19 @@
       </div>
       <div class="form-group pb-4">
         <label>Email</label>
-        <input type="text" class="form-control" :class="{'is-invalid': errorValidation.email}" v-model="form.email">
-        <div v-if="errorValidation.email" class="invalid-feedback">
-          {{errorValidation.email[0]}}
-        </div>
+        <input disabled type="text" class="form-control" v-model="form.email">
       </div>
       <div class="form-group pb-4">
         <label>Role</label>
-        <select class="form-control" :class="{'is-invalid': errorValidation.role}" v-model="form.role" id="">
-          <option v-for="role in roles" :value="role.id">{{role.name}}</option>
+        <select multiple class="form-control" :class="{'is-invalid': errorValidation.roles}" v-model="form.roles" id="">
+          <option v-for="role in roles" :value="role.id" :selected="hasRole(role.id)">{{role.name}}</option>
         </select>
-        <div v-if="errorValidation.role" class="invalid-feedback">
-          {{errorValidation.role[0]}}
+        <div v-if="errorValidation.roles" class="invalid-feedback">
+          {{errorValidation.roles[0]}}
         </div>
       </div>
       <div class="form-group">
-        <button class="btn btn-primary form-control">Create</button>
+        <button class="btn btn-primary form-control">Update</button>
       </div>
     </form>
   </div>
@@ -40,16 +37,17 @@
 
 <script>
 import {onMounted, ref} from 'vue'
-import {useRouter} from 'vue-router'
+import {useRouter, useRoute} from 'vue-router'
 export default {
   name: "create",
   setup(){
     const router = useRouter()
+    const route = useRoute()
     const form = ref({
       first_name: null,
       last_name:null,
       email: null,
-      role:null
+      roles:null
     })
     const errorValidation = ref({})
     const roles = ref([])
@@ -58,11 +56,21 @@ export default {
       .then(res => {
         roles.value = res.data.data
       })
+      axios.get(`users/${route.params.id}`)
+          .then(res => {
+            form.value = res.data.data
+          })
     })
-    function create(){
-      axios.post(`users`, form.value)
+
+    function hasRole(id){
+      form.value.roles.some((role) => {
+        return role.id === id
+      })
+    }
+    function update(){
+      axios.put(`users/${route.params.id}`, form.value)
       .then(res => {
-        alert('Create successfully!')
+        alert('Update successfully!')
         router.push({name: 'users.index'})
       })
       .catch(err => {
@@ -75,10 +83,11 @@ export default {
       })
     }
     return {
-      create,
+      update,
       form,
       errorValidation,
-      roles
+      roles,
+      hasRole
     }
   }
 }

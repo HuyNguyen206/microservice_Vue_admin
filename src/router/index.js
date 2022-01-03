@@ -5,6 +5,13 @@ import Register from "@/views/public/Register";
 import Secure from "@/views/secure/Secure";
 import User from "@/views/secure/users/index";
 import UserCreate from "@/views/secure/users/create";
+import UserEdit from "@/views/secure/users/edit";
+import Product from "@/views/secure/products/index";
+import ProductCreate from "@/views/secure/products/create";
+import ProductEdit from "@/views/secure/products/edit";
+import RoleIndex from "@/views/secure/roles/index";
+import RoleEdit from "@/views/secure/roles/edit";
+import RoleCreate from "@/views/secure/roles/create";
 const routes = [
     {
         path: '/',
@@ -28,6 +35,41 @@ const routes = [
                 path: 'users/create',
                 name: 'users.create',
                 component: UserCreate
+            },
+            {
+                path: 'users/edit/:id',
+                name: 'users.edit',
+                component: UserEdit
+            },
+            {
+                path: 'products',
+                name: 'products.index',
+                component: Product
+            },
+            {
+                path: 'products/create',
+                name: 'products.create',
+                component: ProductCreate
+            },
+            {
+                path: 'products/edit/:id',
+                name: 'products.edit',
+                component: ProductEdit
+            },
+            {
+                path: 'roles',
+                name: 'roles.index',
+                component: RoleIndex
+            },
+            {
+                path: 'roles/edit/:id',
+                name: 'roles.edit',
+                component: RoleEdit
+            },
+            {
+                path: 'roles/create',
+                name: 'roles.create',
+                component: RoleCreate
             }
         ]
 

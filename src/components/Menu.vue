@@ -15,6 +15,19 @@
           </router-link>
         </li>
 
+        <li class="nav-item">
+          <router-link class="nav-link" active-class="active" aria-current="page" :to="{name: 'roles.index'}">
+            <span data-feather="home"></span>
+          Roles
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" active-class="active" aria-current="page" :to="{name: 'products.index'}">
+            <span data-feather="home"></span>
+          Products
+          </router-link>
+        </li>
+
       </ul>
     </div>
   </nav>
