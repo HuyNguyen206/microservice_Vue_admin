@@ -27,6 +27,12 @@
           Products
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link class="nav-link" active-class="active" aria-current="page" :to="{name: 'orders.index'}">
+            <span data-feather="home"></span>
+          Orders
+          </router-link>
+        </li>
 
       </ul>
     </div>

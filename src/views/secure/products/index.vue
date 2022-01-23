@@ -36,23 +36,17 @@
         </tbody>
       </table>
     </div>
-    <nav>
-      <ul class="pagination">
-        <li class="page-item" v-if="previousPage">
-          <a href="" @click.prevent="previous" class="page-link">Previous</a>
-        </li>
-        <li class="page-item" v-if="nextPage">
-          <a href=""  @click.prevent="next" class="page-link">Next</a>
-        </li>
-      </ul>
-    </nav>
+  <paginator @fetchData="fetchProduct" :paginationData="paginationData"></paginator>
 </template>
 
 <script>
-import {computed, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useRouter} from  'vue-router'
+import paginator from "../components/paginator";
 export default {
   name: "ProductList",
+  components: {paginator},
+
   setup(){
     const router = useRouter()
     const products = ref([])
@@ -60,6 +54,7 @@ export default {
     const currentPage = ref(1);
     const perPage = ref(20);
     const fetchProduct = (url = 'products?page=1') => {
+      console.log('fetchProduct ' + url)
       axios.get(`${url}`)
           .then(res => {
             products.value = res.data.data.data
@@ -77,20 +72,6 @@ export default {
     onMounted(() =>{
       fetchProduct();
     })
-    const nextPage = computed( () => {
-      return paginationData.value?.next
-    })
-    const previousPage = computed( () => {
-      return paginationData.value?.prev
-    })
-
-    function next(){
-       fetchProduct(nextPage.value)
-    }
-    function previous(){
-       fetchProduct(previousPage.value)
-    }
-
     function deleteProduct(id){
       if (confirm('Are you sure to delete?')) {
         axios.delete(`products/${id}`)
@@ -104,13 +85,11 @@ export default {
     }
     return {
       products,
-      next,
-      previous,
-      nextPage,
-      previousPage,
+      fetchProduct,
       currentPage,
       perPage,
-      deleteProduct
+      deleteProduct,
+      paginationData
     }
   }
 }

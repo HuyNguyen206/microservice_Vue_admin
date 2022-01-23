@@ -7,7 +7,7 @@
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
     <div class="navbar-nav">
       <div class="nav-item text-nowrap" style="display: flex; align-items: center">
-        <span class="px-3 mr-2 text-white">{{ fullName }}</span>
+        <router-link :to="{name : 'users.profile'}" class="px-3 mr-2 text-white">{{ fullName }}</router-link>
         <a class="nav-link px-3" href="#" @click.prevent="logout">Sign out</a>
       </div>
     </div>

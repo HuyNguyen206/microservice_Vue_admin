@@ -12,6 +12,9 @@ import ProductEdit from "@/views/secure/products/edit";
 import RoleIndex from "@/views/secure/roles/index";
 import RoleEdit from "@/views/secure/roles/edit";
 import RoleCreate from "@/views/secure/roles/create";
+import Orders from "../views/secure/orders/index";
+import OrderItem from "../views/secure/orders/orderItem";
+import Profile from "../views/secure/users/profile";
 const routes = [
     {
         path: '/',
@@ -42,6 +45,11 @@ const routes = [
                 component: UserEdit
             },
             {
+                path: 'users/profile',
+                name: 'users.profile',
+                component: Profile
+            },
+            {
                 path: 'products',
                 name: 'products.index',
                 component: Product
@@ -70,6 +78,16 @@ const routes = [
                 path: 'roles/create',
                 name: 'roles.create',
                 component: RoleCreate
+            },
+            {
+                path: 'orders',
+                name: 'orders.index',
+                component: Orders
+            },
+            {
+                path: 'orders/view/:id',
+                name: 'orders.view',
+                component: OrderItem
             }
         ]
 

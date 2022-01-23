@@ -1,53 +1,48 @@
 <template>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Dashboard</h1>
-      <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-          <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-        </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-          <span data-feather="calendar"></span>
-          This week
-        </button>
-      </div>
-    </div>
-
-    <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-    <h2>Section title</h2>
-    <div class="table-responsive">
-      <table class="table table-striped table-sm">
-        <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Header</th>
-          <th scope="col">Header</th>
-          <th scope="col">Header</th>
-          <th scope="col">Header</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>1,001</td>
-          <td>random</td>
-          <td>data</td>
-          <td>placeholder</td>
-          <td>text</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+  <h2>Daily sales</h2>
+  <div id="chart"></div>
 </template>
 
 <script>
+import {onMounted} from "vue";
+import * as c3 from 'c3'
+
 export default {
   name: "Dashboard",
-  props:{
-    user:{
-      type:Object,
-      required:true
-    }
+  setup() {
+    onMounted(() => {
+      const chart = c3.generate({
+        bindto: '#chart',
+        data:{
+          x: 'x',
+          columns: [
+              ['x'],
+              ['Sales']
+          ],
+          types: {
+            Sales: 'bar'
+          }
+        },
+        axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+              format: '%Y-%m-%d'
+            }
+          }
+        }
+      })
+
+      axios.get('dashboard/chart')
+      .then(res => {
+        chart.load({
+          columns: [
+              ['x', ...res.data.data.map(r => r.date)],
+              ['Sales', ...res.data.data.map(r => r.revenue)]
+          ]
+        })
+      })
+    })
   }
 
 }

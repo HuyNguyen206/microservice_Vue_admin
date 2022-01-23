@@ -1,9 +1,9 @@
 <template>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Users</h1>
+      <h1 class="h2">Orders</h1>
     </div>
     <div class="d-flex justify-content-between flex-wrap btn-toolbar">
-      <router-link :to="{name:'users.create'}" class="btn btn-sm btn-outline-secondary">Add</router-link>
+      <a @click.prevent="exportCSV" class="btn btn-sm btn-outline-secondary">Export</a>
     </div>
     <div class="table-responsive">
       <table class="table table-striped table-sm">
@@ -12,33 +12,25 @@
           <th scope="col">#</th>
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
-          <th scope="col">Role</th>
           <th scope="col">Email</th>
-          <th scope="col">Action</th>
         </tr>
         </thead>
-        <tbody v-if="users">
-        <tr v-for="(user, index) in users" :key="user.id">
+        <tbody v-if="orders">
+        <tr v-for="(order, index) in orders" :key="order.id">
           <td>{{index = index + (currentPage-1)*perPage + 1}}</td>
-          <td>{{user.first_name}}</td>
-          <td>{{user.last_name}}</td>
-          <td>
-            <span v-for="(role, index2) in user.roles" :key="index2">
-              {{role.name}} {{(index2+1) !== user.roles.length ? ',' : ''}}
-            </span>
-          </td>
-          <td>{{user.email}}</td>
+          <td>{{order.first_name}}</td>
+          <td>{{order.last_name}}</td>
+          <td>{{order.email}}</td>
           <td>
             <div class="btn-group">
-              <router-link :to="{name: 'users.edit', params:{id: user.id}}" href=""  class="btn btn-primary">Edit</router-link>
-              <a href="" @click.prevent="deleteUser(user.id)" class="btn btn-danger">Delete</a>
+              <router-link :to="{name: 'orders.view', params:{id: order.id}}" href=""  class="btn btn-primary">View</router-link>
             </div>
           </td>
         </tr>
         </tbody>
       </table>
     </div>
-   <paginator @fetchData="fetchUser" :paginationData="paginationData"></paginator>
+   <paginator @fetchData="fetchOrder" :paginationData="paginationData"></paginator>
 </template>
 
 <script>
@@ -46,18 +38,18 @@ import {onMounted, ref} from "vue";
 import {useRouter} from  'vue-router'
 import paginator from "../components/paginator";
 export default {
-  name: "UserList",
+  name: "OrderList",
   components:{paginator},
   setup(){
     const router = useRouter()
-    const users = ref([])
+    const orders = ref([])
     const paginationData = ref({})
     const currentPage = ref(1);
     const perPage = ref(5);
-    const fetchUser = (url = 'users?page=1') => {
+    const fetchOrder = (url = 'orders?page=1') => {
       axios.get(`${url}`)
           .then(res => {
-            users.value = res.data.data
+            orders.value = res.data.data.data
             paginationData.value = res.data.links
             currentPage.value = res.data.meta.current_page
             perPage.value = res.data.meta.per_page
@@ -70,26 +62,26 @@ export default {
           })
     }
     onMounted(() =>{
-      fetchUser();
+      fetchOrder();
     })
-    function deleteUser(id){
-      if (confirm('Are you sure to delete?')) {
-        axios.delete(`users/${id}`)
-            .then(res => {
-              fetchUser()
-            })
-            .catch(err => {
-
-            })
-      }
+    function exportCSV(){
+      axios.get('orders/export/csv', {responseType: 'blob'})
+      .then(res => {
+        // const blob = new Blob([res.data], {type: 'text/csv'})
+        const downloadUrl = window.URL.createObjectURL(res.data)
+        const link = document.createElement('a');
+        link.href = downloadUrl
+        link.download = 'order.csv'
+        link.click()
+      })
     }
     return {
-      users,
+      orders,
       currentPage,
       perPage,
-      deleteUser,
       paginationData,
-      fetchUser
+      fetchOrder,
+      exportCSV
     }
   }
 }
